@@ -8,6 +8,8 @@ package Modules;
 import Views.frmEdit;
 import Views.frmUtama;
 import Views.frmTambah;
+import Views.frmTentang;
+import Views.frmUserMan;
 import java.awt.Component;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
@@ -22,7 +24,17 @@ public class mdlUtama extends javax.swing.JFrame {
     private DefaultTableModel mdl;
     private frmUtama frmMain;
     private frmTambah frmTambah;
-    private frmEdit frmEdit;
+    private frmTentang frmTentang;
+    private frmUserMan frmUserMan;
+    public String userLogin;
+
+    public String getUserLogin() {
+        return userLogin;
+    }
+
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
+    }
     
     public Component cmpMain() {
         return frmMain;
@@ -43,8 +55,14 @@ public class mdlUtama extends javax.swing.JFrame {
         frmTambah.setVisible(true);
     }
     
-    public void showEdit(String nisn) {
-        frmEdit = new frmEdit();
-        frmEdit.setVisible(true);
+    public void showTentang() {
+        frmTentang = new frmTentang();
+        frmTentang.setVisible(true);
+    }
+    
+    public void showUserMan(String username) {
+        frmUserMan = new frmUserMan();
+        frmUserMan.RefreshDialog(username);
+        frmUserMan.setVisible(true);
     }
 }

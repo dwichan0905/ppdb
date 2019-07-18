@@ -58,7 +58,6 @@ public class frmLogin extends javax.swing.JFrame {
         setResizable(false);
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon("D:\\Studies\\Kuliahan\\2\\Pemrograman Berbasis Objek\\Tugas\\TA\\PPDB\\Resources\\login.png")); // NOI18N
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Kredensial"));
         jPanel2.setForeground(new java.awt.Color(0, 0, 0));
@@ -67,8 +66,20 @@ public class frmLogin extends javax.swing.JFrame {
 
         jLabel3.setText("Password");
 
+        txtUsername.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUsernameActionPerformed(evt);
+            }
+        });
+
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Silakan masuk untuk melanjutkan.");
+
+        txtPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPasswordActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -181,12 +192,15 @@ public class frmLogin extends javax.swing.JFrame {
                         os.greeting();
                         JOptionPane.showMessageDialog(this, "Selamat datang, " + rs.getString("nama") + "!", "Welcome", JOptionPane.INFORMATION_MESSAGE);
                         Modules.mdlUtama ut = new Modules.mdlUtama();
-                        ut.showMain(rs.getString("nama").toUpperCase(), rs.getString("email").toLowerCase());
-                        this.dispose();
+                        ut.userLogin = txtUsername.getText();
+                        ut.showMain(rs.getString("nama").toUpperCase(), rs.getString("username").toLowerCase());
+                        this.setVisible(false);
                     } else {
+                        os.error();
                         JOptionPane.showMessageDialog(this, "Password salah!", "Failed", JOptionPane.WARNING_MESSAGE);
                     }
                 } else {
+                    os.error();
                     JOptionPane.showMessageDialog(this, "Username tidak ditemukan!", "Failed", JOptionPane.WARNING_MESSAGE);
                 }
             } catch (SQLException ex) {
@@ -194,6 +208,16 @@ public class frmLogin extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void txtUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsernameActionPerformed
+        // TODO add your handling code here:
+        txtPassword.requestFocus();
+    }//GEN-LAST:event_txtUsernameActionPerformed
+
+    private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
+        // TODO add your handling code here:
+        btnLoginActionPerformed(evt);
+    }//GEN-LAST:event_txtPasswordActionPerformed
 
     /**
      * @param args the command line arguments
@@ -237,7 +261,7 @@ public class frmLogin extends javax.swing.JFrame {
             });
         } else {
             JOptionPane.showMessageDialog(null, "Gagal terhubung dengan database!", "Failed!", JOptionPane.ERROR_MESSAGE);
-            System.exit(-263);
+            new frmKonektivitas().setVisible(true);
         }
     }
 

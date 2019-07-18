@@ -5,21 +5,68 @@
  */
 package Views;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.text.AbstractDocument;
 
 /**
  *
  * @author User
  */
 public class frmEdit extends Modules.mdlUtama {
+    public String nisn;
 
+    public void setNisn(String nisn) {
+        this.nisn = nisn;
+    }
+    
+    private Modules.ConnectionBuilder cb = new Modules.ConnectionBuilder();
+    private Modules.OutputSuara os = new Modules.OutputSuara();
     /**
      * Creates new form tambah
      */
     public frmEdit() {
         initComponents();
+        ((AbstractDocument) txtNISN.getDocument()).setDocumentFilter(new MyDocumentFilter());
+        ((AbstractDocument) txtTeleponAyah.getDocument()).setDocumentFilter(new MyDocumentFilter());
+        ((AbstractDocument) txtTeleponIbu.getDocument()).setDocumentFilter(new MyDocumentFilter());
+        ((AbstractDocument) txtHP.getDocument()).setDocumentFilter(new MyDocumentFilter());
     }
-
+    
+    public void getData() throws SQLException {
+        ResultSet rs = cb.executeSelect("SELECT * FROM siswa_baru WHERE nisn = \"" + this.nisn + "\"");
+        
+        if (rs.next()) {
+            this.txtNISN.setText(rs.getString("nisn"));
+            this.txtNamaLengkap.setText(rs.getString("namalengkap"));
+            switch (rs.getString("jeniskelamin")) {
+                case "L":
+                    bgJK.setSelected(lakilaki.getModel(), true);
+                    break;
+                case "P":
+                    bgJK.setSelected(perempuan.getModel(), true);
+                    break;
+            }
+            this.txtTptLahir.setText(rs.getString("tempatlhr"));
+            this.dtTglLahir.setDate(rs.getDate("tanggallhr"));
+            this.txtAlamat.setText(rs.getString("alamat"));
+            this.cmbAgama.setSelectedItem(rs.getString("agama"));
+            this.txtNamaAyah.setText(rs.getString("namaayah"));
+            this.txtPekerjaanAyah.setText(rs.getString("pekerjaanayah"));
+            this.txtAlamatAyah.setText(rs.getString("alamatayah"));
+            this.txtNamaIbu.setText(rs.getString("namaibu"));
+            this.txtPekerjaanIbu.setText(rs.getString("pekerjaanibu"));
+            this.txtTeleponIbu.setText(rs.getString("teleponibu"));
+            this.txtAlamatIbu.setText(rs.getString("alamatibu"));
+            this.cmbStatus.setSelectedItem(rs.getString("status"));
+            this.txtHP.setText(rs.getString("handphone"));
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,7 +76,8 @@ public class frmEdit extends Modules.mdlUtama {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
+        bgJK = new javax.swing.ButtonGroup();
+        jTextField11 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -39,43 +87,45 @@ public class frmEdit extends Modules.mdlUtama {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
-        jTextField5 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
+        txtNISN = new javax.swing.JTextField();
+        txtNamaLengkap = new javax.swing.JTextField();
+        lakilaki = new javax.swing.JRadioButton();
+        perempuan = new javax.swing.JRadioButton();
+        txtTptLahir = new javax.swing.JTextField();
+        cmbAgama = new javax.swing.JComboBox<>();
+        cmbStatus = new javax.swing.JComboBox<>();
+        txtAlamat = new javax.swing.JTextField();
+        txtHP = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        jToggleButton2 = new javax.swing.JToggleButton();
-        jButton1 = new javax.swing.JButton();
-        jTextField8 = new javax.swing.JTextField();
+        btnTambah = new javax.swing.JButton();
+        txtNamaAyah = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        jTextField9 = new javax.swing.JTextField();
+        txtPekerjaanAyah = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
-        jTextField10 = new javax.swing.JTextField();
+        txtTeleponAyah = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
-        jTextField12 = new javax.swing.JTextField();
-        jTextField13 = new javax.swing.JTextField();
+        txtAlamatAyah = new javax.swing.JTextField();
+        txtAlamatIbu = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
-        jTextField14 = new javax.swing.JTextField();
-        jTextField15 = new javax.swing.JTextField();
+        txtTeleponIbu = new javax.swing.JTextField();
+        txtPekerjaanIbu = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
-        jTextField16 = new javax.swing.JTextField();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        txtNamaIbu = new javax.swing.JTextField();
+        dtTglLahir = new com.toedter.calendar.JDateChooser();
+        btnBatal = new javax.swing.JButton();
+
+        jTextField11.setText("jTextField8");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Tambah Peserta Didik");
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel1.setText("Edit Rincian Peserta Didik");
+        jLabel1.setText("Ubah Rincian Peserta Didik");
 
         jLabel3.setText("NISN");
 
@@ -93,29 +143,32 @@ public class frmEdit extends Modules.mdlUtama {
 
         jLabel11.setText("Tanggal kelahiran");
 
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        txtNISN.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                txtNISNActionPerformed(evt);
             }
         });
 
-        buttonGroup1.add(jRadioButton3);
-        jRadioButton3.setText("Laki - laki");
+        bgJK.add(lakilaki);
+        lakilaki.setSelected(true);
+        lakilaki.setText("Laki - laki");
+        lakilaki.setActionCommand("L");
 
-        buttonGroup1.add(jRadioButton4);
-        jRadioButton4.setText("Perempuan");
+        bgJK.add(perempuan);
+        perempuan.setText("Perempuan");
+        perempuan.setActionCommand("P");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Islam", "Kristen", "Katolik", "Hindu", "Budha" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        cmbAgama.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Islam", "Kristen", "Katholik", "Hindu", "Buddha", "Konghuchu" }));
+        cmbAgama.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                cmbAgamaActionPerformed(evt);
             }
         });
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Anak kandung", "Anak angkat" }));
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+        cmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Anak kandung", "Anak angkat" }));
+        cmbStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
+                cmbStatusActionPerformed(evt);
             }
         });
 
@@ -123,17 +176,10 @@ public class frmEdit extends Modules.mdlUtama {
 
         jLabel15.setText("No. Handphone");
 
-        jToggleButton2.setText("Batal");
-        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnTambah.setText("Ubah");
+        btnTambah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton2ActionPerformed(evt);
-            }
-        });
-
-        jButton1.setText("Ubah");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnTambahActionPerformed(evt);
             }
         });
 
@@ -153,7 +199,20 @@ public class frmEdit extends Modules.mdlUtama {
 
         jLabel21.setText("Nama Ibu");
 
-        jDateChooser1.setDateFormatString("EEEE, d MMMM yyyy");
+        try {
+            dtTglLahir.setDate(new SimpleDateFormat("yyyy-MM-dd").parse("2000-01-01")
+            );
+        } catch (ParseException e) {
+
+        }
+        dtTglLahir.setDateFormatString("EEEE, d MMMM yyyy");
+
+        btnBatal.setText("Batal");
+        btnBatal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBatalActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -168,25 +227,14 @@ public class frmEdit extends Modules.mdlUtama {
                             .addComponent(jLabel3))
                         .addGap(49, 49, 49)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField4)
+                            .addComponent(txtNamaLengkap)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(143, 143, 143)
-                                        .addComponent(jRadioButton4))
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 108, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(141, 141, 141)
-                                .addComponent(jLabel8))
-                            .addComponent(jLabel1))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                                        .addComponent(perempuan))
+                                    .addComponent(txtNISN, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 110, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9)
@@ -206,25 +254,36 @@ public class frmEdit extends Modules.mdlUtama {
                             .addComponent(jLabel6))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField5)
-                            .addComponent(jTextField6)
-                            .addComponent(jTextField8)
-                            .addComponent(jTextField9)
-                            .addComponent(jTextField12)
-                            .addComponent(jTextField16)
-                            .addComponent(jTextField15)
-                            .addComponent(jTextField14)
-                            .addComponent(jTextField13)
+                            .addComponent(txtHP)
+                            .addComponent(txtTptLahir)
+                            .addComponent(txtAlamat)
+                            .addComponent(txtNamaAyah)
+                            .addComponent(txtPekerjaanAyah)
+                            .addComponent(txtAlamatAyah)
+                            .addComponent(txtNamaIbu)
+                            .addComponent(txtPekerjaanIbu)
+                            .addComponent(txtTeleponIbu)
+                            .addComponent(txtAlamatIbu)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jRadioButton3)
-                                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jTextField7, javax.swing.GroupLayout.Alignment.TRAILING))))
-                .addGap(14, 14, 14))
+                                    .addComponent(lakilaki)
+                                    .addComponent(dtTglLahir, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cmbAgama, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtTeleponAyah, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(141, 141, 141)
+                                .addComponent(jLabel8))
+                            .addComponent(jLabel1))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnTambah)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnBatal)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -234,76 +293,76 @@ public class frmEdit extends Modules.mdlUtama {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNISN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNamaLengkap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jRadioButton3)
-                    .addComponent(jRadioButton4))
+                    .addComponent(lakilaki)
+                    .addComponent(perempuan))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTptLahir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(dtTglLahir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbAgama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNamaAyah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPekerjaanAyah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTeleponAyah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel16))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
-                    .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtAlamatAyah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNamaIbu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel21))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel20)
-                    .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPekerjaanIbu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTeleponIbu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel19))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18)
-                    .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtAlamatIbu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtHP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel15))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jToggleButton2))
+                    .addComponent(btnTambah)
+                    .addComponent(btnBatal))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -313,28 +372,108 @@ public class frmEdit extends Modules.mdlUtama {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void cmbAgamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbAgamaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_cmbAgamaActionPerformed
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+    private void cmbStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStatusActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox2ActionPerformed
+    }//GEN-LAST:event_cmbStatusActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
+        // TODO add your handling code here:
+        try {
+            if (txtNISN.getText().equals("")) {
+                os.error();
+                JOptionPane.showMessageDialog(this, "NISN wajib diisi!", "NISN Required", JOptionPane.WARNING_MESSAGE);
+                txtNISN.requestFocus();
+                return;
+            }
+            if (txtNamaLengkap.getText().equals("")) {
+                os.error();
+                JOptionPane.showMessageDialog(this, "Nama Lengkap wajib diisi!", "Name Required", JOptionPane.WARNING_MESSAGE);
+                txtNamaLengkap.requestFocus();
+                return;
+            }
+            if (txtTptLahir.getText().equals("")) {
+                os.error();
+                JOptionPane.showMessageDialog(this, "Tempat Lahir wajib diisi!", "PoB Required", JOptionPane.WARNING_MESSAGE);
+                txtTptLahir.requestFocus();
+                return;
+            }
+            
+            ResultSet ngecek = cb.executeSelect("SELECT nisn, namalengkap FROM siswa_baru WHERE nisn = \"" + this.txtNISN.getText() + "\"");
+            
+            if (ngecek.next()) {
+                cb.executeUpdate("UPDATE siswa_baru SET "
+                        + "namalengkap = \"" + this.txtNamaLengkap.getText() + "\","
+                        + "jeniskelamin = '" + this.bgJK.getSelection().getActionCommand() + "',"
+                        + "tempatlhr = \"" + this.txtTptLahir.getText() + "\","
+                        + "tanggallhr = \"" + new SimpleDateFormat("yyyy-MM-dd").format(this.dtTglLahir.getDate()) + "\","
+                        + "alamat = \"" + this.txtAlamat.getText() + "\","
+                        + "agama = \"" + this.cmbAgama.getItemAt(this.cmbAgama.getSelectedIndex()) + "\","
+                        + "namaayah = \"" + this.txtNamaAyah.getText() + "\","
+                        + "pekerjaanayah = \"" + this.txtPekerjaanAyah.getText() + "\","
+                        + "teleponayah = \"" + this.txtTeleponAyah.getText() + "\","
+                        + "alamatayah = \"" + this.txtAlamatAyah.getText() + "\","
+                        + "namaibu = \"" + this.txtNamaIbu.getText() + "\","
+                        + "pekerjaanibu = \"" + this.txtPekerjaanIbu.getText() + "\","
+                        + "teleponibu = \"" + this.txtTeleponIbu.getText() + "\","
+                        + "alamatibu = \"" + this.txtAlamatIbu.getText() + "\","
+                        + "status = \"" + this.cmbStatus.getItemAt(this.cmbStatus.getSelectedIndex()) + "\","
+                        + "handphone = \"" + this.txtHP.getText() + "\" WHERE nisn = \"" + nisn + "\"");
+                this.dispose();
+                //super.RefreshData();
+                os.input_ok();
+                JOptionPane.showMessageDialog(super.cmpMain(), "Berhasil mengubah data peserta didik!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                ResultSet ngecek2 = cb.executeSelect("SELECT nisn, namalengkap FROM siswa_baru WHERE nisn = \"" + this.txtNISN.getText() + "\"");
+            
+                if (ngecek2.next()) {
+                    os.error();
+                    JOptionPane.showMessageDialog(this, "NISN " + this.txtNISN.getText() + " sudah ada!", "NISN Already Added", JOptionPane.WARNING_MESSAGE);
+                    txtNISN.requestFocus();
+                    return;
+                } else {
+                    cb.executeUpdate("UPDATE siswa_baru SET "
+                        + "nisn = \"" + this.txtNISN.getText() + "\","
+                        + "namalengkap = \"" + this.txtNamaLengkap.getText() + "\","
+                        + "jeniskelamin = '" + this.bgJK.getSelection().getActionCommand() + "',"
+                        + "tempatlhr = \"" + this.txtTptLahir.getText() + "\","
+                        + "tanggallhr = \"" + new SimpleDateFormat("yyyy-MM-dd").format(this.dtTglLahir.getDate()) + "\","
+                        + "alamat = \"" + this.txtAlamat.getText() + "\","
+                        + "agama = \"" + this.cmbAgama.getItemAt(this.cmbAgama.getSelectedIndex()) + "\","
+                        + "namaayah = \"" + this.txtNamaAyah.getText() + "\","
+                        + "pekerjaanayah = \"" + this.txtPekerjaanAyah.getText() + "\","
+                        + "teleponayah = \"" + this.txtTeleponAyah.getText() + "\","
+                        + "alamatayah = \"" + this.txtAlamatAyah.getText() + "\","
+                        + "namaibu = \"" + this.txtNamaIbu.getText() + "\","
+                        + "pekerjaanibu = \"" + this.txtPekerjaanIbu.getText() + "\","
+                        + "teleponibu = \"" + this.txtTeleponIbu.getText() + "\","
+                        + "alamatibu = \"" + this.txtAlamatIbu.getText() + "\","
+                        + "status = \"" + this.cmbStatus.getItemAt(this.cmbStatus.getSelectedIndex()) + "\","
+                        + "handphone = \"" + this.txtHP.getText() + "\" WHERE nisn = \"" + nisn + "\"");
+                    this.dispose();
+                    //super.RefreshData();
+                    os.input_ok();
+                    JOptionPane.showMessageDialog(super.cmpMain(), "Berhasil mengubah data peserta didik!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        } catch (SQLException ex) {
+            os.error();
+            JOptionPane.showMessageDialog(super.cmpMain(), "Gagal mengubah peserta didik baru!\nPeriksa Logcat untuk informasi lebih lanjut.", "Failed", JOptionPane.ERROR_MESSAGE);
+            Logger.getLogger(frmEdit.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnTambahActionPerformed
+
+    private void txtNISNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNISNActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNISNActionPerformed
+
+    private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        JOptionPane.showMessageDialog(super.cmpMain(), "Sukses menambahkan siswa baru!", "Success", JOptionPane.INFORMATION_MESSAGE);
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
-
-    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
-    }//GEN-LAST:event_jToggleButton2ActionPerformed
+    }//GEN-LAST:event_btnBatalActionPerformed
 
     /**
      * @param args the command line arguments
@@ -378,11 +517,12 @@ public class frmEdit extends Modules.mdlUtama {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButton1;
-    public javax.swing.JComboBox<String> jComboBox1;
-    public javax.swing.JComboBox<String> jComboBox2;
-    public com.toedter.calendar.JDateChooser jDateChooser1;
+    public javax.swing.ButtonGroup bgJK;
+    private javax.swing.JButton btnBatal;
+    private javax.swing.JButton btnTambah;
+    public javax.swing.JComboBox<String> cmbAgama;
+    public javax.swing.JComboBox<String> cmbStatus;
+    public com.toedter.calendar.JDateChooser dtTglLahir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -402,21 +542,21 @@ public class frmEdit extends Modules.mdlUtama {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
-    public javax.swing.JTextField jTextField10;
-    public javax.swing.JTextField jTextField12;
-    public javax.swing.JTextField jTextField13;
-    public javax.swing.JTextField jTextField14;
-    public javax.swing.JTextField jTextField15;
-    public javax.swing.JTextField jTextField16;
-    public javax.swing.JTextField jTextField2;
-    public javax.swing.JTextField jTextField4;
-    public javax.swing.JTextField jTextField5;
-    public javax.swing.JTextField jTextField6;
-    public javax.swing.JTextField jTextField7;
-    public javax.swing.JTextField jTextField8;
-    public javax.swing.JTextField jTextField9;
-    private javax.swing.JToggleButton jToggleButton2;
+    private javax.swing.JTextField jTextField11;
+    private javax.swing.JRadioButton lakilaki;
+    private javax.swing.JRadioButton perempuan;
+    public javax.swing.JTextField txtAlamat;
+    public javax.swing.JTextField txtAlamatAyah;
+    public javax.swing.JTextField txtAlamatIbu;
+    public javax.swing.JTextField txtHP;
+    public javax.swing.JTextField txtNISN;
+    public javax.swing.JTextField txtNamaAyah;
+    public javax.swing.JTextField txtNamaIbu;
+    public javax.swing.JTextField txtNamaLengkap;
+    public javax.swing.JTextField txtPekerjaanAyah;
+    public javax.swing.JTextField txtPekerjaanIbu;
+    public javax.swing.JTextField txtTeleponAyah;
+    public javax.swing.JTextField txtTeleponIbu;
+    public javax.swing.JTextField txtTptLahir;
     // End of variables declaration//GEN-END:variables
 }

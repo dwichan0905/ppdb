@@ -5,13 +5,14 @@
  */
 package Views;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.text.AbstractDocument;
 
 /**
  *
@@ -25,6 +26,10 @@ public class frmTambah extends Modules.mdlUtama {
      */
     public frmTambah() {
         initComponents();
+        ((AbstractDocument) txtNISN.getDocument()).setDocumentFilter(new MyDocumentFilter());
+        ((AbstractDocument) txtTeleponAyah.getDocument()).setDocumentFilter(new MyDocumentFilter());
+        ((AbstractDocument) txtTeleponIbu.getDocument()).setDocumentFilter(new MyDocumentFilter());
+        ((AbstractDocument) txtHP.getDocument()).setDocumentFilter(new MyDocumentFilter());
     }
 
     /**
@@ -134,7 +139,7 @@ public class frmTambah extends Modules.mdlUtama {
 
         jLabel14.setText("Alamat");
 
-        jLabel15.setText("No. Handphone");
+        jLabel15.setText("Telepon/HP");
 
         btnTambah.setText("Tambah");
         btnTambah.addActionListener(new java.awt.event.ActionListener() {
@@ -362,28 +367,55 @@ public class frmTambah extends Modules.mdlUtama {
                 return;
             }
             
-            cb.executeUpdate("INSERT INTO siswa_baru VALUES ("
-                    + "\"" + this.txtNISN.getText() + "\","
-                    + "\"" + this.txtNamaLengkap.getText() + "\","
-                    + "'" + this.bgJK.getSelection().getActionCommand() + "',"
-                    + "\"" + this.txtTptLahir.getText() + "\","
-                    + "\"" + new SimpleDateFormat("yyyy-MM-dd").format(this.dtTglLahir.getDate()) + "\","
-                    + "\"" + this.txtAlamat.getText() + "\","
-                    + "\"" + this.cmbAgama.getItemAt(this.cmbAgama.getSelectedIndex()) + "\","
-                    + "\"" + this.txtNamaAyah.getText() + "\","
-                    + "\"" + this.txtPekerjaanAyah.getText() + "\","
-                    + "\"" + this.txtTeleponAyah.getText() + "\","
-                    + "\"" + this.txtAlamatAyah.getText() + "\","
-                    + "\"" + this.txtNamaIbu.getText() + "\","
-                    + "\"" + this.txtPekerjaanIbu.getText() + "\","
-                    + "\"" + this.txtTeleponIbu.getText() + "\","
-                    + "\"" + this.txtAlamatIbu.getText() + "\","
-                    + "\"" + this.cmbStatus.getItemAt(this.cmbStatus.getSelectedIndex()) + "\","
-                    + "\"" + this.txtHP.getText() + "\")");
-            this.dispose();
-            //super.RefreshData();
-            os.input_ok();
-            JOptionPane.showMessageDialog(super.cmpMain(), "Sukses menambahkan siswa baru!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            ResultSet ngecek = cb.executeSelect("SELECT nisn, namalengkap FROM siswa_baru WHERE nisn = \"" + this.txtNISN.getText() + "\"");
+            
+            if (ngecek.next()) {
+                os.error();
+                JOptionPane.showMessageDialog(this, "NISN " + this.txtNISN.getText() + " sudah ada!", "NISN Already Added", JOptionPane.WARNING_MESSAGE);
+                txtNISN.requestFocus();
+                return;
+            } else {
+                cb.executeUpdate("INSERT INTO siswa_baru VALUES ("
+                        + "\"" + this.txtNISN.getText() + "\","
+                        + "\"" + this.txtNamaLengkap.getText() + "\","
+                        + "'" + this.bgJK.getSelection().getActionCommand() + "',"
+                        + "\"" + this.txtTptLahir.getText() + "\","
+                        + "\"" + new SimpleDateFormat("yyyy-MM-dd").format(this.dtTglLahir.getDate()) + "\","
+                        + "\"" + this.txtAlamat.getText() + "\","
+                        + "\"" + this.cmbAgama.getItemAt(this.cmbAgama.getSelectedIndex()) + "\","
+                        + "\"" + this.txtNamaAyah.getText() + "\","
+                        + "\"" + this.txtPekerjaanAyah.getText() + "\","
+                        + "\"" + this.txtTeleponAyah.getText() + "\","
+                        + "\"" + this.txtAlamatAyah.getText() + "\","
+                        + "\"" + this.txtNamaIbu.getText() + "\","
+                        + "\"" + this.txtPekerjaanIbu.getText() + "\","
+                        + "\"" + this.txtTeleponIbu.getText() + "\","
+                        + "\"" + this.txtAlamatIbu.getText() + "\","
+                        + "\"" + this.cmbStatus.getItemAt(this.cmbStatus.getSelectedIndex()) + "\","
+                        + "\"" + this.txtHP.getText() + "\")");
+                this.dispose();
+                //super.RefreshData();
+                os.input_ok();
+                JOptionPane.showMessageDialog(super.cmpMain(), "Sukses menambahkan siswa baru!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                if (JOptionPane.showConfirmDialog(super.cmpMain(), "Tambah peserta baru lagi?", "Again?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                    this.txtNISN.setText("");
+                    this.txtNamaLengkap.setText("");
+                    this.txtTptLahir.setText("");
+                    this.txtAlamat.setText("");
+                    this.cmbAgama.setSelectedIndex(0);
+                    this.txtNamaAyah.setText("");
+                    this.txtPekerjaanAyah.setText("");
+                    this.txtTeleponAyah.setText("");
+                    this.txtAlamatAyah.setText("");
+                    this.txtNamaIbu.setText("");
+                    this.txtPekerjaanIbu.setText("");
+                    this.txtTeleponIbu.setText("");
+                    this.txtAlamatIbu.setText("");
+                    this.cmbStatus.setSelectedIndex(0);
+                    this.txtHP.setText("");
+                    this.setVisible(true);
+                }
+            }
         } catch (SQLException ex) {
             os.error();
             JOptionPane.showMessageDialog(super.cmpMain(), "Gagal menambahkan siswa baru!\nPeriksa Logcat untuk informasi lebih lanjut.", "Failed", JOptionPane.ERROR_MESSAGE);
